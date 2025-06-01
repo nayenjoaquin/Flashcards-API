@@ -1,9 +1,11 @@
 import { Router } from "express";
-import { getDecks } from "./controller";
+import { createDeck, getDeckById, getDecks } from "./controller";
 
 
 const router = Router();
 
-router.get("/",getDecks);
+router.get("/", getDecks);
+router.get('/:id', getDeckById);
+router.post("/", createDeck);
 
 export default router;
