@@ -11,3 +11,12 @@ export const buildDeckQuery = (table: string) =>`
         FROM ${table} d
         JOIN "user" u ON u.id = d.user_id
     `;
+
+export const buildCardQuery = (table: string) => `
+        SELECT
+        fc.id,
+        fc.created_at,
+        fc.updated_at,
+        fc.front,
+        fc.back
+        FROM ${table} fc`;

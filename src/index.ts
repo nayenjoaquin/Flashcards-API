@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config();
 import decksRouter from './decks/router';
+import flashcardsRouter from './flashcards/router';
 
 import express from 'express';
 import cors from 'cors';
@@ -12,6 +13,7 @@ app.use(cors());
 
 app.use(express.json());
 app.use('/decks', decksRouter);
+app.use('/flashcards', flashcardsRouter);
 
 app.get('/', (_req, res) => {
   res.send(`Hello! Secret is: ${process.env.MY_SECRET}`);
