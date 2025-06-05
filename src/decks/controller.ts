@@ -57,10 +57,11 @@ export const createDeck = async (req: Request, res: Response)  => {
 
     const {error, value} = deckSchema.validate(req.body);
     if (error) {
-            res.status(400).send({
+        res.status(400).send({
             error: 'Invalid deck data',
             details: error.details
         });
+        
     }
 
 
