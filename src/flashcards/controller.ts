@@ -31,4 +31,34 @@ export const getFlashcards = async (req: Request, res: Response) => {
 export const createCard = async (req: Request, res: Response) => {
     const {error, value} = CardSchema.validate(req.body)
 
+    if(error){
+        res.status(400).send({
+            error: 'Invalid card data',
+            details: error.details
+        });
+    }
+
+    const { front, back, deck_id } = value
+
+    const q = `
+    WITH inserted AS (
+    INSERT INTO flashcard (front, back, deck_id)
+    VALUES ('${front}', '${back}', '${deck_id}')
+    RETURNING *
+    )
+    ${buildCardQuery('inserted')};
+    `
+
+    try{
+        const result = await pool.query(q);
+        res.send(result.rows[0])
+    }catch(err: any){
+        console.error(q);
+        
+        res.status(500).send({
+            error: 'Failed to insert card to the database',
+            details: err
+        })
+    }
+
 }

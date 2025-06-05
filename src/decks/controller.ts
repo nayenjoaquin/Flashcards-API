@@ -83,7 +83,7 @@ export const createDeck = async (req: Request, res: Response)  => {
         console.error('Error creating deck:', error);
         res.status(500).send({
             error: 'Failed to create deck',
-            details: error.message
+            details: error
         });
     }
 
