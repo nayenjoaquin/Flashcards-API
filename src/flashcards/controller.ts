@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { pool } from "../shared/db"
-import { deckIdSchema, deckSchema } from "../shared/schemas";
-import { buildCardQuery, buildDeckQuery } from "../shared/queries";
+import { buildCardQuery } from "../shared/queries";
 import { log } from "console";
+import { CardSchema } from "../shared/schemas";
 
 export const getFlashcards = async (req: Request, res: Response) => {
 
@@ -27,3 +27,8 @@ export const getFlashcards = async (req: Request, res: Response) => {
         });
     }
 };
+
+export const createCard = async (req: Request, res: Response) => {
+    const {error, value} = CardSchema.validate(req.body)
+
+}

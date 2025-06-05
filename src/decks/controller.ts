@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { pool } from "../shared/db"
-import { deckIdSchema, deckSchema } from "../shared/schemas";
+import { uuidSchema, DeckSchema } from "../shared/schemas";
 import { buildDeckQuery } from "../shared/queries";
 import { log } from "console";
 
@@ -30,7 +30,7 @@ export const getDeckById = async (req: Request, res: Response) => {
 
     const { id } = req.params;
 
-    const {error, value} = deckIdSchema.validate(id);
+    const {error, value} = uuidSchema.validate(id);
     if (error) {
         res.status(400).send({
             error: 'Invalid deck ID',
@@ -55,7 +55,7 @@ export const getDeckById = async (req: Request, res: Response) => {
 
 export const createDeck = async (req: Request, res: Response)  => {
 
-    const {error, value} = deckSchema.validate(req.body);
+    const {error, value} = DeckSchema.validate(req.body);
     if (error) {
         res.status(400).send({
             error: 'Invalid deck data',
