@@ -88,3 +88,33 @@ export const createDeck = async (req: Request, res: Response)  => {
     }
 
 }
+
+export const deletDeck = async (req: Request, res: Response) => {
+    const {id} = req.params
+    const {value, error} = uuidSchema.validate(id);
+    if(error){
+        res.status(400).send({
+            error: 'Invalid deck Id',
+            details: error.details
+        });
+    }
+
+    const q = `DELETE from deck
+    WHERE id = '${id}';`;
+
+    try{
+        const result = await pool.query(q);
+        console.log(result.rowCount);
+        if(result.rowCount==0){
+            res.status(404).send({
+                details: 'Deck not found in the database. Please verify the id'
+            })
+        }
+        res.status(204).send();
+    }catch(err: any){
+        res.status(500).send({
+            error: 'failed to delete deck from database',
+            details: err
+        });
+    }
+}
