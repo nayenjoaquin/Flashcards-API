@@ -20,3 +20,14 @@ export const buildCardQuery = (table: string) => `
         fc.front,
         fc.back
         FROM ${table} fc`;
+
+export const buildUserQuery = (table: string) => `
+    SELECT
+    u.id,
+    u.created_at,
+    u.updated_at,
+    u.username,
+    u.email,
+    u.password
+    FROM ${table} u
+`;

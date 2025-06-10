@@ -19,3 +19,9 @@ export const CardSchema = Joi.object({
     deck_id: Joi.string().guid().required()
 
 })
+
+export const UserSchema = Joi.object({
+    username : Joi.string().max(50).required(),
+    email : Joi.string().max(255).required(),
+    password :Joi.string().max(255).required()
+}).required();
