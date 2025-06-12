@@ -6,14 +6,22 @@ import { CardSchema } from "../shared/schemas";
 
 export const getFlashcards = async (req: Request, res: Response) => {
 
-    const { did, page = 1, limit = 10 } = req.query;
-    const offset = (parseInt(page as string) - 1) * parseInt(limit as string);
+    const { did, page = -1, limit = 10 } = req.query;
+    console.log('QUERY PARAMS: ', {
+        did,
+        page,
+        limit
+    });
+    
+    const l = parseInt(limit as string);
+    const p = parseInt( page as string);
+    const offset = (p - 1) * l;
 
 
     const query = `${buildCardQuery('flashcard')}
     ${did ? `WHERE fc.deck_id = '${did}'` : ''}
     ORDER BY fc.created_at DESC
-    LIMIT ${limit} OFFSET ${offset};`;
+    ${p==-1 ?';':`LIMIT ${limit} OFFSET ${offset};`}`;
     try{
         console.log('Executing query:', query);
         
