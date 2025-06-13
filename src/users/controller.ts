@@ -31,7 +31,14 @@ export const createUser = async(req: Request, res:  Response) => {
     try{
         const result = await pool.query(q);
 
-        res.status(201).send(result.rows[0])
+        const newUser = result.rows[0];
+
+        const token = generateJWT(newUser as User, '30 d');
+
+        res.status(201).send({
+            data: newUser,
+            token: token
+        })
     }catch(err){
         
         res.status(500).send({
