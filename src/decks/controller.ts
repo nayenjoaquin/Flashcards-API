@@ -3,15 +3,15 @@ import { pool } from "../shared/db"
 import { uuidSchema, DeckSchema } from "../shared/schemas";
 import { buildDeckQuery } from "../shared/queries";
 import { log } from "console";
+import { verifyJWT } from "../shared/utils";
 
 export const getDecks = async (req: Request, res: Response) => {
 
-    const { uid, page = 1, limit = 10 } = req.query;
+    const { page = 1, limit = 10 } = req.query;
     const offset = (parseInt(page as string) - 1) * parseInt(limit as string);
 
 
     const query = `${buildDeckQuery('deck')}
-    ${uid ? `WHERE d.user_id = '${uid}'` : ''}
     ORDER BY d.created_at DESC
     LIMIT ${limit} OFFSET ${offset};`;
     try{
