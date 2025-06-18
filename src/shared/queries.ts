@@ -31,3 +31,14 @@ export const buildUserQuery = (table: string) => `
     u.password
     FROM ${table} u
 `;
+
+export const buildProgressQuery = (table: string) => `
+    SELECT
+    p.user_id,
+    p.card_id,
+    p.i,
+    p.n,
+    p.ef,
+    p.due_date
+    FROM ${table} p
+`;

@@ -25,3 +25,12 @@ export const UserSchema = Joi.object({
     email : Joi.string().max(255).required(),
     password :Joi.string().max(255).required()
 }).required();
+
+export const ProgressSchema = Joi.object({
+    card_id: Joi.string().guid().required(),
+    user_id: Joi.string().guid().required(),
+    i: Joi.number().integer().min(0).required(),
+    n: Joi.number().integer().min(0).required(),
+    ef: Joi.number().min(1.3).required(),
+    due_date: Joi.date().required(),
+}).required();
