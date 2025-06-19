@@ -1,8 +1,6 @@
 export const buildDeckQuery = (table: string) =>`
         SELECT
         d.id,
-        d.created_at,
-        d.updated_at,
         d.name,
         d.description,
         d.visibility,
@@ -15,8 +13,6 @@ export const buildDeckQuery = (table: string) =>`
 export const buildCardQuery = (table: string) => `
         SELECT
         fc.id,
-        fc.created_at,
-        fc.updated_at,
         fc.front,
         fc.back
         FROM ${table} fc`;
@@ -24,8 +20,6 @@ export const buildCardQuery = (table: string) => `
 export const buildUserQuery = (table: string) => `
     SELECT
     u.id,
-    u.created_at,
-    u.updated_at,
     u.username,
     u.email,
     u.password
@@ -34,11 +28,11 @@ export const buildUserQuery = (table: string) => `
 
 export const buildProgressQuery = (table: string) => `
     SELECT
-    p.user_id,
     p.card_id,
     p.i,
     p.n,
     p.ef,
-    p.due_date
+    p.due_date,
+    p.reviewed_at
     FROM ${table} p
 `;

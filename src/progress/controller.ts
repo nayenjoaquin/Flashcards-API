@@ -46,16 +46,18 @@ export const updateProgress = async (req: Request, res: Response) => {
         SET i = EXCLUDED.i,
             n = EXCLUDED.n,
             ef = EXCLUDED.ef,
-            due_date = EXCLUDED.due_date
+            due_date = EXCLUDED.due_date,
+            reviewed_at = CURRENT_TIMESTAMP
         RETURNING *;
     `;
 
     try{
+        log('executing: ', query);
         const result = await pool.query(query);
         if (result.rowCount == 0) {
             throw new Error("Failed to update progress");
         }
-
+        log('result', result.rows)
         res.status(200).json({
             message: "Progress updated successfully",
             progress: result.rows[0]});
