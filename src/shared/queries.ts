@@ -7,8 +7,7 @@ export const buildDeckQuery = (table: string) =>`
         d.saved,
         u.username AS owner
         FROM ${table} d
-        JOIN "user" u ON u.id = d.user_id
-    `;
+        JOIN "user" u ON u.id = d.user_id`;
 
 export const buildCardQuery = (table: string) => `
         SELECT
@@ -23,8 +22,7 @@ export const buildUserQuery = (table: string) => `
     u.username,
     u.email,
     u.password
-    FROM ${table} u
-`;
+    FROM ${table} u`;
 
 export const buildProgressQuery = (table: string) => `
     SELECT
@@ -34,5 +32,4 @@ export const buildProgressQuery = (table: string) => `
     p.ef,
     p.due_date,
     p.reviewed_at
-    FROM ${table} p
-`;
+    FROM ${table} p`;
