@@ -33,3 +33,14 @@ export const buildProgressQuery = (table: string) => `
     p.due_date,
     p.reviewed_at
     FROM ${table} p`;
+
+    export const buildSessionQuery = (table: string)=>`
+    SELECT
+    s.deck_id,
+    s.user_id,
+    s.wrong,
+    s.good,
+    s.perfect,
+    s.duration
+    FROM ${table} s
+    `;

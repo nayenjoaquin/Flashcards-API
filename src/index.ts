@@ -5,6 +5,8 @@ import flashcardsRouter from './flashcards/router';
 import userRouter from './users/router';
 import savedRouter from './saved-decks/router';
 import progressRouter from './progress/router';
+import lastReviewRouter from './last-review/router';
+import sessionRouter from './session/router';
 
 import express from 'express';
 import cors from 'cors';
@@ -20,6 +22,9 @@ app.use('/flashcards', flashcardsRouter);
 app.use('/users', userRouter);
 app.use('/saved', savedRouter);
 app.use('/progress', progressRouter);
+app.use('/last-review', lastReviewRouter);
+app.use('/session', sessionRouter)
+
 
 
 app.get('/', (_req, res) => {

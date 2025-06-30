@@ -34,3 +34,12 @@ export const ProgressSchema = Joi.object({
     ef: Joi.number().min(1.3).required(),
     due_date: Joi.date().required(),
 }).required();
+
+export const SessionSchema = Joi.object({
+    deck_id: Joi.string().guid().required(),
+    user_id: Joi.string().guid().required(),
+    wrong: Joi.number().integer().min(0).required(),
+    good: Joi.number().integer().min(0).required(),
+    perfect: Joi.number().integer().min(0).required(),
+    duration: Joi.number().integer().min(0).required()
+})
