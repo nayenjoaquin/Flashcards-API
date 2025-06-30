@@ -33,7 +33,7 @@ export const saveSession = async(req: Request, res: Response) => {
     try{
         const result = await pool.query(q);
 
-        res.status(201).send(result.rows);
+        res.status(201).send(result.rows[0]);
     }catch(error){
         res.status(500).send({
             error: 'Internal server error',
