@@ -20,7 +20,7 @@ export const getLastReview = async(req: Request, res: Response)=>{
             res.status(404).send([]);
         }
 
-        res.send(result.rows)
+        res.send(result.rows[0])
 
     }catch(err){
         res.status(500).send({

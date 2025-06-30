@@ -41,6 +41,7 @@ export const buildProgressQuery = (table: string) => `
     s.wrong,
     s.good,
     s.perfect,
-    s.duration
+    s.duration,
+    s.created_at
     FROM ${table} s
     `;
