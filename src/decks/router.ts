@@ -1,5 +1,5 @@
 import { Request, Response, Router } from "express";
-import { createDeck, deletDeck, getDeckById, getDecks } from "./controller";
+import { createDeck, deleteDeck, getDeckById, getDecks } from "./controller";
 import { searchDeck } from "./search/controller";
 
 
@@ -14,6 +14,6 @@ router.get("/",(req: Request, res: Response)=>{
 });
 router.get('/:id', getDeckById);
 router.post("/", createDeck);
-router.delete('/:id', deletDeck);
+router.delete('/:id', deleteDeck);
 
 export default router;

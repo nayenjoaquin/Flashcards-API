@@ -89,7 +89,7 @@ export const createDeck = async (req: Request, res: Response)  => {
 
 }
 
-export const deletDeck = async (req: Request, res: Response) => {
+export const deleteDeck = async (req: Request, res: Response) => {
     const {id} = req.params
     const {value, error} = uuidSchema.validate(id);
     if(error){
