@@ -5,6 +5,7 @@ export const buildDeckQuery = (table: string) =>`
         d.description,
         d.visibility,
         d.saved,
+        d.user_id,
         u.username AS owner
         FROM ${table} d
         JOIN "user" u ON u.id = d.user_id`;
