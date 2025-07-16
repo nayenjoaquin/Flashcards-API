@@ -4,7 +4,6 @@ export const DeckSchema = Joi.object({
     name: Joi.string().min(1).max(255).required(),
     description: Joi.string().optional(),
     visibility: Joi.string().valid('public', 'private', 'archived').default('private'),
-    user_id: Joi.string().guid().required()
 }).required();
 export const DeckUpdateSchema = Joi.object({
     name: Joi.string().min(1).max(255).optional(),

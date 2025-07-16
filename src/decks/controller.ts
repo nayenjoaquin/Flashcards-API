@@ -3,15 +3,19 @@ import { pool } from "../shared/db"
 import { uuidSchema, DeckSchema } from "../shared/schemas";
 import { buildDeckQuery } from "../shared/queries";
 import { log } from "console";
-import { verifyJWT } from "../shared/utils";
+import { verifyAuthorization, verifyJWT } from "../shared/utils";
 
 export const getDecks = async (req: Request, res: Response) => {
-
     const { page = 1, limit = 10 } = req.query;
     const offset = (parseInt(page as string) - 1) * parseInt(limit as string);
+    const user = verifyAuthorization(req, res);
+    if (!user) res.status(401).send({
+        error: 'Unauthorized',
+        details: 'You must be logged in to access this resource'
+    });
 
 
-    const query = `${buildDeckQuery('deck')}
+    const query = `${buildDeckQuery('deck', user!.id )}
     ORDER BY d.created_at DESC
     LIMIT ${limit} OFFSET ${offset};`;
     try{
@@ -27,6 +31,11 @@ export const getDecks = async (req: Request, res: Response) => {
 };
 
 export const getDeckById = async (req: Request, res: Response) => {
+    const user = verifyAuthorization(req, res);
+    if (!user) res.status(401).send({
+        error: 'Unauthorized',
+        details: 'You must be logged in to access this resource'
+    });
 
     const { id } = req.params;
 
@@ -39,9 +48,10 @@ export const getDeckById = async (req: Request, res: Response) => {
         return;
     }
 
-    const q = `${buildDeckQuery('deck')} WHERE d.id = '${id}';`;
+    const q = `${buildDeckQuery('deck', user!.id)} WHERE d.id = '${id}';`;
 
     try{
+        console.log('Executing query:', q);
         const result = await pool.query(q);
         res.send(result.rows[0]);
     }catch (error: any) {
@@ -54,6 +64,11 @@ export const getDeckById = async (req: Request, res: Response) => {
 };
 
 export const createDeck = async (req: Request, res: Response)  => {
+    const user = verifyAuthorization(req, res);
+    if (!user) res.status(401).send({
+        error: 'Unauthorized',
+        details: 'You must be logged in to access this resource'
+    });
 
     const {error, value} = DeckSchema.validate(req.body);
     if (error) {
@@ -65,14 +80,14 @@ export const createDeck = async (req: Request, res: Response)  => {
     }
 
 
-    const { name, description, visibility, user_id } = value;
+    const { name, description, visibility } = value;
     const query = `
     WITH inserted AS (
     INSERT INTO deck (name, description, visibility, user_id)
-    VALUES ('${name}', '${description}', '${visibility}', '${user_id}')
+    VALUES ('${name}', '${description}', '${visibility}', '${user!.id}')
     RETURNING *
     )
-    ${buildDeckQuery('inserted')};
+    ${buildDeckQuery('inserted', user!.id)};
     `;
     try {
         console.log('Executing query:', query);

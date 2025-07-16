@@ -83,8 +83,6 @@ export const getMyDecks = async (req: Request, res: Response) => {
             });
         }
     }
-
-    console.log('USER ID:', user?.id);
     
     const {error, value} = uuidSchema.validate(user?.id);
     if (error) {
@@ -95,7 +93,7 @@ export const getMyDecks = async (req: Request, res: Response) => {
     }
 
     const q = `
-    ${buildDeckQuery('deck')}
+    ${buildDeckQuery('deck', user!.id)}
     LEFT JOIN "saved" s ON s.deck_id = d.id
     WHERE s.user_id = '${user?.id}';`;
 

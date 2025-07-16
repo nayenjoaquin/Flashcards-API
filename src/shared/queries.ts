@@ -1,4 +1,4 @@
-export const buildDeckQuery = (table: string) =>`
+export const buildDeckQuery = (table: string, user_id: string) =>`
         SELECT
         d.id,
         d.name,
@@ -6,9 +6,34 @@ export const buildDeckQuery = (table: string) =>`
         d.visibility,
         d.saved,
         d.user_id,
-        u.username AS owner
+        u.username AS owner,
+        COALESCE( cards.cards, '[]') AS cards,
+        progress.progress
         FROM ${table} d
-        JOIN "user" u ON u.id = d.user_id`;
+        JOIN "user" u ON u.id = d.user_id
+        LEFT JOIN LATERAL(SELECT
+        json_agg(
+                json_build_object(
+                        'id', fc.id,
+                        'front', fc.front,
+                        'back', fc.back) ORDER BY fc.id
+                ) AS cards
+        FROM "flashcard" fc
+        WHERE fc.deck_id = d.id) cards ON true
+        LEFT JOIN LATERAL(SELECT
+        json_agg(
+                json_build_object(
+                        'i', p.i,
+                        'n', p.n,
+                        'ef', p.ef,
+                        'due_date', p.due_date,
+                        'reviewed_at', p.reviewed_at) ORDER BY p.card_id
+                ) AS progress
+        FROM "progress" p
+        WHERE p.card_id IN (
+                SELECT fc.id FROM flashcard fc WHERE fc.deck_id = d.id
+        ) AND p.user_id = '${user_id}'
+        ) progress ON true`;
 
 export const buildCardQuery = (table: string) => `
         SELECT
