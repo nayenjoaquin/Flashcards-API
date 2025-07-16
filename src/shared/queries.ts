@@ -8,9 +8,11 @@ export const buildDeckQuery = (table: string, user_id: string) =>`
         d.user_id,
         u.username AS owner,
         COALESCE( cards.cards, '[]') AS cards,
-        progress.progress
+        progress.progress,
+        last_review.last_reviewed_at
         FROM ${table} d
         JOIN "user" u ON u.id = d.user_id
+        
         LEFT JOIN LATERAL(SELECT
         json_agg(
                 json_build_object(
@@ -20,8 +22,10 @@ export const buildDeckQuery = (table: string, user_id: string) =>`
                 ) AS cards
         FROM "flashcard" fc
         WHERE fc.deck_id = d.id) cards ON true
+        
         LEFT JOIN LATERAL(SELECT
-        json_agg(
+        json_object_agg(
+                p.card_id,
                 json_build_object(
                         'i', p.i,
                         'n', p.n,
@@ -33,7 +37,15 @@ export const buildDeckQuery = (table: string, user_id: string) =>`
         WHERE p.card_id IN (
                 SELECT fc.id FROM flashcard fc WHERE fc.deck_id = d.id
         ) AND p.user_id = '${user_id}'
-        ) progress ON true`;
+        ) progress ON true
+
+        LEFT JOIN LATERAL (
+        SELECT MAX(p.reviewed_at) AS last_reviewed_at
+        FROM "progress" p
+        JOIN "flashcard" fc ON fc.id = p.card_id
+        WHERE fc.deck_id = d.id
+        AND p.user_id = '${user_id}'
+        ) last_review ON true`;
 
 export const buildCardQuery = (table: string) => `
         SELECT
