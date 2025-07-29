@@ -59,7 +59,7 @@ export const createCard = async (req: Request, res: Response) => {
 
     try{
         const result = await pool.query(q);
-        res.send(result.rows[0])
+        res.status(201).send(result.rows[0])
     }catch(err: any){
         console.error(q);
         
