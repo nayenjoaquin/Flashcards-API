@@ -85,13 +85,15 @@ export const createDeck = async (req: Request, res: Response)  => {
     WITH inserted AS (
     INSERT INTO deck (name, description, visibility, user_id)
     VALUES ('${name}', '${description}', '${visibility}', '${user!.id}')
-    RETURNING ${buildDeckQuery('deck', user!.id)};
+    RETURNING *)
+    
+    ${buildDeckQuery('inserted', user!.id)}
     `;
     try {
         console.log('Executing query:', query);
         
         const result = await pool.query(query)
-        res.send(result.rows[0]);
+        res.status(201).send(result.rows[0]);
     } catch (error: any) {
         console.error('Error creating deck:', error);
         res.status(500).send({
