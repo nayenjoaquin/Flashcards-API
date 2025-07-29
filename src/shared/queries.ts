@@ -7,6 +7,7 @@ export const buildDeckQuery = (table: string, user_id: string) =>`
         d.saved,
         d.user_id,
         u.username AS owner,
+        d.created_at,
         COALESCE( cards.cards, '[]') AS cards,
         progress.progress,
         last_review.last_reviewed_at
