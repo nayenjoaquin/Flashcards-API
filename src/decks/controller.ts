@@ -85,9 +85,7 @@ export const createDeck = async (req: Request, res: Response)  => {
     WITH inserted AS (
     INSERT INTO deck (name, description, visibility, user_id)
     VALUES ('${name}', '${description}', '${visibility}', '${user!.id}')
-    RETURNING *
-    )
-    ${buildDeckQuery('inserted', user!.id)};
+    RETURNING ${buildDeckQuery('deck', user!.id)};
     `;
     try {
         console.log('Executing query:', query);
