@@ -27,8 +27,6 @@ export const saveSession = async(req: Request, res: Response) => {
     )
     ${buildSessionQuery('inserted')};
     `;
-
-    console.log('query: ', q);
     
     try{
         const result = await pool.query(q);

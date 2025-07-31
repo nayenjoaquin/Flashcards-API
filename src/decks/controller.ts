@@ -51,7 +51,6 @@ export const getDeckById = async (req: Request, res: Response) => {
     const q = `${buildDeckQuery('deck', user!.id)} WHERE d.id = '${id}';`;
 
     try{
-        console.log('Executing query:', q);
         const result = await pool.query(q);
         res.send(result.rows[0]);
     }catch (error: any) {
@@ -90,7 +89,6 @@ export const createDeck = async (req: Request, res: Response)  => {
     ${buildDeckQuery('inserted', user!.id)}
     `;
     try {
-        console.log('Executing query:', query);
         
         const result = await pool.query(query)
         res.status(201).send(result.rows[0]);
@@ -119,7 +117,6 @@ export const deleteDeck = async (req: Request, res: Response) => {
 
     try{
         const result = await pool.query(q);
-        console.log(result.rowCount);
         if(result.rowCount==0){
             res.status(404).send({
                 details: 'Deck not found in the database. Please verify the id'

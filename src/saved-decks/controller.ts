@@ -98,7 +98,6 @@ export const getMyDecks = async (req: Request, res: Response) => {
     WHERE s.user_id = '${user?.id}';`;
 
     try{
-        console.log('Executing query:', q);
         const result = await pool.query(q);
         res.send(result.rows);
     }catch (error: any) {

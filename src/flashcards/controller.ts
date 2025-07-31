@@ -7,11 +7,6 @@ import { CardSchema } from "../shared/schemas";
 export const getFlashcards = async (req: Request, res: Response) => {
 
     const { did, page = -1, limit = 10 } = req.query;
-    console.log('QUERY PARAMS: ', {
-        did,
-        page,
-        limit
-    });
     
     const l = parseInt(limit as string);
     const p = parseInt( page as string);
@@ -23,7 +18,6 @@ export const getFlashcards = async (req: Request, res: Response) => {
     ORDER BY fc.created_at DESC
     ${p==-1 ?';':`LIMIT ${limit} OFFSET ${offset};`}`;
     try{
-        console.log('Executing query:', query);
         
         const result = await pool.query(query);
         res.send(result.rows);
