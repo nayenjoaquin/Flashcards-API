@@ -1,10 +1,11 @@
 import { Router } from "express";
-import { createCard, getFlashcards } from "./controller";
+import { createCard, deleteCard, getFlashcards } from "./controller";
 
 
 const router = Router();
 
 router.get("/", getFlashcards);
-router.post("/", createCard)
+router.post("/", createCard);
+router.delete("/:id", deleteCard);
 
 export default router;

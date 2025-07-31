@@ -3,6 +3,7 @@ import { pool } from "../shared/db"
 import { buildCardQuery } from "../shared/queries";
 import { log } from "console";
 import { CardSchema } from "../shared/schemas";
+import { verifyAuthorization } from "../shared/utils";
 
 export const getFlashcards = async (req: Request, res: Response) => {
 
@@ -62,5 +63,38 @@ export const createCard = async (req: Request, res: Response) => {
             details: err
         })
     }
+
+}
+
+export const deleteCard = async (req: Request, res: Response) => {
+    const {id} = req.params;
+    const user = verifyAuthorization(req, res);
+     if (!user) res.status(401).send({
+        error: 'Unauthorized',
+        details: 'You must be logged in to access this resource'
+    });
+
+    const query = `
+    DELETE FROM flashcard
+    USING deck
+    WHERE flashcard.deck_id = deck.id
+    AND flashcard.id = '${id}'
+    AND deck.user_id = '${user?.id}';`;
+
+    console.log('executing query: ', query);
+
+    try{
+        const result = await pool.query(query);
+
+        if(result.rowCount==0) res.status(404).send('Card not found in the database, please verify the id');
+        res.status(204).send();
+    }catch(err){
+        res.status(500).send({
+            error: 'Internal server error',
+            details: err
+        });
+    }
+    
+
 
 }
