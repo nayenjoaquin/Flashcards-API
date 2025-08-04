@@ -1,3 +1,7 @@
+import dotenv from 'dotenv';
+
+dotenv.config();
+
 export const buildDeckQuery = (table: string, user_id: string) =>`
         SELECT
         d.id,
@@ -11,7 +15,11 @@ export const buildDeckQuery = (table: string, user_id: string) =>`
         d.created_at,
         COALESCE( cards.cards, '[]') AS cards,
         progress.progress,
-        last_review.last_reviewed_at
+        last_review.last_reviewed_at,
+        CASE
+                WHEN u.id = '${process.env.ROOT_ID}' THEN true
+                ELSE false
+        END AS verified
         FROM ${table} d
         JOIN "user" u ON u.id = d.user_id
         

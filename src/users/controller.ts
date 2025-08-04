@@ -68,7 +68,7 @@ export const signIn = async(req: Request, res: Response) => {
                 data: user,
                 token: generateJWT({
                     ...user
-                } as User, '30d')
+                } as User, '30 d')
             })
         }catch(err){
             console.error(err);
