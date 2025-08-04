@@ -3,6 +3,7 @@ export const buildDeckQuery = (table: string, user_id: string) =>`
         d.id,
         d.name,
         d.description,
+        d.img,
         d.visibility,
         d.saved,
         d.user_id,
