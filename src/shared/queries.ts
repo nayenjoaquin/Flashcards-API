@@ -19,7 +19,7 @@ export const buildDeckQuery = (table: string, user_id: string) =>`
         CASE
                 WHEN u.id = '${process.env.ROOT_ID}' THEN true
                 ELSE false
-        END AS verified
+        END AS featured
         FROM ${table} d
         JOIN "user" u ON u.id = d.user_id
         
