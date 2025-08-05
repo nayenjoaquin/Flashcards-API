@@ -33,7 +33,7 @@ export const createUser = async(req: Request, res:  Response) => {
 
         const newUser = result.rows[0];
 
-        const token = generateJWT(newUser as User, '30 d');
+        const token = generateJWT(newUser as User, '30d');
 
         res.status(201).send({
             data: newUser,
@@ -68,7 +68,7 @@ export const signIn = async(req: Request, res: Response) => {
                 data: user,
                 token: generateJWT({
                     ...user
-                } as User, '30 d')
+                } as User, '30d')
             })
         }catch(err){
             console.error(err);
