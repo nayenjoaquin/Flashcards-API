@@ -38,6 +38,8 @@ export const updateProgress = async (req: Request, res: Response) => {
         });
     }
     const { i, n, ef, due_date } = value;
+    console.log('body: ', req.body);
+    
 
     const query = `
         INSERT INTO progress (card_id, user_id, i, n, ef, due_date)
@@ -52,12 +54,10 @@ export const updateProgress = async (req: Request, res: Response) => {
     `;
 
     try{
-        log('executing: ', query);
         const result = await pool.query(query);
         if (result.rowCount == 0) {
             throw new Error("Failed to update progress");
         }
-        log('result', result.rows)
         res.status(200).json({
             message: "Progress updated successfully",
             progress: result.rows[0]});

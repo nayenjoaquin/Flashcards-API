@@ -31,7 +31,7 @@ export const ProgressSchema = Joi.object({
     i: Joi.number().integer().min(0).required(),
     n: Joi.number().integer().min(0).required(),
     ef: Joi.number().min(1.3).required(),
-    due_date: Joi.date().required(),
+    due_date: Joi.date().required()
 }).required();
 
 export const SessionSchema = Joi.object({

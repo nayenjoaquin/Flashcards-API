@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { buildDeckQuery } from "../../shared/queries";
 import { pool } from "../../shared/db";
-import { error } from "console";
+import { error, log } from "console";
 import { verifyAuthorization } from "../../shared/utils";
 
 export const searchDeck = async ( req: Request, res: Response): Promise<Response> => {
@@ -28,6 +28,8 @@ export const searchDeck = async ( req: Request, res: Response): Promise<Response
         return res.send(result.rows);
 
     }catch(err){
+        console.log(err);
+        
         return res.status(500).send({
             error: 'Internal server error',
             details: err
