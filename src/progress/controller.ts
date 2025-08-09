@@ -38,7 +38,6 @@ export const updateProgress = async (req: Request, res: Response) => {
         });
     }
     const { i, n, ef, due_date } = value;
-    console.log('body: ', req.body);
     
 
     const query = `
