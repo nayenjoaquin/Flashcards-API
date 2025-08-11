@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
 import { pool } from "../shared/db"
-import { uuidSchema, DeckSchema } from "../shared/schemas";
+import { uuidSchema, DeckSchema, UpdateDeckSchema } from "../shared/schemas";
 import { buildDeckQuery } from "../shared/queries";
 import { log } from "console";
 import { verifyAuthorization, verifyJWT } from "../shared/utils";
+import { updateProgress } from "../progress/controller";
 
 export const getDecks = async (req: Request, res: Response) => {
     const { page = 1, limit = 10 } = req.query;
@@ -64,11 +65,6 @@ export const getDeckById = async (req: Request, res: Response) => {
 
 export const createDeck = async (req: Request, res: Response)  => {
     const user = verifyAuthorization(req, res);
-    if (!user) res.status(401).send({
-        error: 'Unauthorized',
-        details: 'You must be logged in to access this resource'
-    });
-
     const {error, value} = DeckSchema.validate(req.body);
     if (error) {
         res.status(400).send({
@@ -128,5 +124,62 @@ export const deleteDeck = async (req: Request, res: Response) => {
             error: 'failed to delete deck from database',
             details: err
         });
+    }
+}
+
+export const updateDeck = async (req: Request, res: Response) => {
+    const {id} = req.params
+    const user = verifyAuthorization(req, res);
+    if(!user) return;
+
+    const{error, value} = UpdateDeckSchema.validate(req.body);
+
+    if(error) res.status(400).send({
+        error: 'Invalid deck data',
+        details: error.details
+    });
+
+    const {name, description, img} = value
+    const fields = Object.keys(value);
+
+    let updateQuery =`UPDATE deck
+    SET
+    `;
+    
+    fields.forEach(field=>{
+        if(!value[field]) return;
+        updateQuery+=`${field} = '${value[field]}', `
+
+    });
+    updateQuery = updateQuery.slice(0, -2);
+
+
+    const q = `
+    WITH updated AS (
+    ${updateQuery}
+    WHERE id = '${id}' AND user_id = '${user.id}'
+    RETURNING *
+    )
+    
+    ${buildDeckQuery('updated', user.id)}
+    `;
+
+    try{
+        log('executing: ', q);
+        const result = await pool.query(q);
+
+        if(result.rows.length==0) res.status(400).send({
+            error: "There's no deck with the provided id for this user"
+        });
+       res.send(result.rows[0]);
+
+
+    }catch(err){
+        console.error(err);
+        
+        res.status(500).send({
+            error: 'Internal server error',
+            details: err
+        })
     }
 }

@@ -3,8 +3,14 @@ import Joi from "joi";
 export const DeckSchema = Joi.object({
     name: Joi.string().min(1).max(255).required(),
     description: Joi.string().optional(),
+    img: Joi.string().optional(),
     visibility: Joi.string().valid('public', 'private', 'archived').default('private'),
 }).required();
+export const UpdateDeckSchema = Joi.object({
+    name: Joi.string().min(1).max(255).optional(),
+    description: Joi.string().optional(),
+    img: Joi.string().optional(),
+})
 export const DeckUpdateSchema = Joi.object({
     name: Joi.string().min(1).max(255).optional(),
     description: Joi.string().optional(),
