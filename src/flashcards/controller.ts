@@ -121,12 +121,12 @@ export const updateCard = async (req: Request, res: Response) => {
 
     const fullQuery = `WITH updated AS (
     ${updateQuery}
+    WHERE id = '${id}'
     RETURNING *
     )
-    ${buildDeckQuery('deck', user.id, 'JOIN updated on updated.deck_id = d.id')} WHERE d.id = updated.deck_id;
+    ${buildCardQuery('updated')}
     `;
     try{
-        console.log('executing: ', updateQuery);
         
         const result = await pool.query(fullQuery);
         if(result.rows.length==0){
@@ -134,7 +134,7 @@ export const updateCard = async (req: Request, res: Response) => {
                 error: 'No card matches for this user with the id provided'
             });
         }
-
+        log('result: ', result.rows[0]);
         res.send(result.rows[0]);
     }catch(err){
         console.error('Failed to update deck: ', err);
