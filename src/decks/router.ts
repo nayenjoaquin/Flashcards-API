@@ -8,9 +8,9 @@ const router = Router();
 router.get("/",(req: Request, res: Response)=>{
     const {search} = req.query
     if(search){
-        return searchDeck(req, res);
+        searchDeck(req, res);
     }
-    return getDecks(req, res)
+    getDecks(req, res)
 });
 router.get('/:id', getDeckById);
 router.post("/", createDeck);

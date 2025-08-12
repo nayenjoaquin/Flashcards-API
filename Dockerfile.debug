@@ -1,0 +1,11 @@
+FROM node:20-alpine
+
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+RUN npm ci
+
+COPY . .
+
+# Run tsc directly so we see the compile errors
+RUN npx tsc --pretty

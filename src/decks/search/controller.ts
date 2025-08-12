@@ -4,10 +4,10 @@ import { pool } from "../../shared/db";
 import { error, log } from "console";
 import { verifyAuthorization } from "../../shared/utils";
 
-export const searchDeck = async ( req: Request, res: Response): Promise<Response> => {
+export const searchDeck = async ( req: Request, res: Response) => {
     const {search} = req.query;
     const user = verifyAuthorization(req, res);
-    if (!user) return res.status(401).send({
+    if (!user) res.status(401).send({
         error: 'Unauthorized',
         details: 'You must be logged in to access this resource'
     });
@@ -20,17 +20,17 @@ export const searchDeck = async ( req: Request, res: Response): Promise<Response
     try{
         const result = await pool.query(q);
         if (result.rows.length==0){
-            return res.status(404).send({
+            res.status(404).send({
                 error: 'No deck matches the provided search key'
             })
         }
 
-        return res.send(result.rows);
+        res.send(result.rows);
 
     }catch(err){
         console.log(err);
         
-        return res.status(500).send({
+        res.status(500).send({
             error: 'Internal server error',
             details: err
         })
