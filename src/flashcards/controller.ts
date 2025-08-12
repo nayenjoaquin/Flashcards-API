@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { pool } from "../shared/db"
-import { buildCardQuery } from "../shared/queries";
+import { buildCardQuery, buildDeckQuery } from "../shared/queries";
 import { log } from "console";
-import { CardSchema } from "../shared/schemas";
+import { CardSchema, CardUpdateSchema } from "../shared/schemas";
 import { verifyAuthorization } from "../shared/utils";
 
 export const getFlashcards = async (req: Request, res: Response) => {
@@ -97,4 +97,51 @@ export const deleteCard = async (req: Request, res: Response) => {
     
 
 
+}
+
+export const updateCard = async (req: Request, res: Response) => {
+    const {id} = req.params;
+    const user = verifyAuthorization(req, res);
+    if(!user) return;
+    const {error, value} = CardUpdateSchema.validate(req.body)
+    if(error) res.status(400).send({
+        error: 'Invalid card data, please try again'
+    });
+    const fields = Object.keys(value);
+
+    let updateQuery = `UPDATE flashcard
+    SET
+    `;
+
+    fields.forEach(field=>{
+        if(!value[field]) return;
+        updateQuery+= `${field} = '${value[field]}', `
+    });
+    updateQuery = updateQuery.slice(0, -2);
+
+    const fullQuery = `WITH updated AS (
+    ${updateQuery}
+    RETURNING *
+    )
+    ${buildDeckQuery('deck', user.id, 'JOIN updated on updated.deck_id = d.id')} WHERE d.id = updated.deck_id;
+    `;
+    try{
+        console.log('executing: ', updateQuery);
+        
+        const result = await pool.query(fullQuery);
+        if(result.rows.length==0){
+            res.status(400).send({
+                error: 'No card matches for this user with the id provided'
+            });
+        }
+
+        res.send(result.rows[0]);
+    }catch(err){
+        console.error('Failed to update deck: ', err);
+        res.status(500).send({
+            error: 'Internal server error',
+            details: err
+        })
+        
+    }
 }

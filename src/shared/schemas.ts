@@ -25,6 +25,10 @@ export const CardSchema = Joi.object({
 
 })
 
+export const CardUpdateSchema = Joi.object({
+    front: Joi.string().optional(),
+    back: Joi.string().optional()
+})
 export const UserSchema = Joi.object({
     username : Joi.string().max(50).required(),
     email : Joi.string().max(255).required(),

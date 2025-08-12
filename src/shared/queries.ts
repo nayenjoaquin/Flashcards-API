@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-export const buildDeckQuery = (table: string, user_id: string) =>`
+export const buildDeckQuery = (table: string, user_id: string, join?: string) =>`
         SELECT
         d.id,
         d.name,
@@ -22,6 +22,7 @@ export const buildDeckQuery = (table: string, user_id: string) =>`
         END AS featured
         FROM ${table} d
         JOIN "user" u ON u.id = d.user_id
+        ${join ? join : ''}
         
         LEFT JOIN LATERAL(SELECT
         json_agg(
