@@ -31,6 +31,6 @@ app.get('/', (_req, res) => {
   res.send(`Hello! Secret is: ${process.env.MY_SECRET}`);
 });
 
-app.listen(port, () => {
+app.listen(port, '0.0.0.0' , () => {
   console.log(`Server running on http://localhost:${port}`);
 });
